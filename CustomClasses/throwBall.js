@@ -1,5 +1,5 @@
 const ballMultiplier = 600;
-const ballBounce = 0.9;
+const ballBounce = 0.8;
 
 class ThrowBall extends Phaser.GameObjects.Sprite {
 	constructor(scene, x, y, velocity) {
@@ -73,7 +73,7 @@ class ThrowBall extends Phaser.GameObjects.Sprite {
 							timer.remove();
 						},
 						callbackScope: this,
-						loop: false
+						loop: false,
 					});
 				}
 			);
