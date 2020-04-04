@@ -1,0 +1,13 @@
+{
+	"Button_template": {
+		"text": {
+			"type": "Text",
+			"value": ""
+		},
+		"image": {
+			"type": "Sprite",
+			"path": "",
+			"name": ""
+		}
+	}
+}
