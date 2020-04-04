@@ -1,9 +1,9 @@
 const PLAYER = {
-	speed: 180,
-	air_speed: 120,
+	speed: 250,
+	air_speed: 150,
 	neg_air_speed: 80,
-	jump_force: 250,
-	dash_speed: 500
+	jump_force: 380,
+	dash_speed: 600,
 };
 
 class Player extends Phaser.GameObjects.Group {
@@ -28,11 +28,11 @@ class Player extends Phaser.GameObjects.Group {
 			up: Phaser.Input.Keyboard.KeyCodes.W,
 			down: Phaser.Input.Keyboard.KeyCodes.S,
 			left: Phaser.Input.Keyboard.KeyCodes.A,
-			right: Phaser.Input.Keyboard.KeyCodes.D
+			right: Phaser.Input.Keyboard.KeyCodes.D,
 		});
 
 		//Pointer events
-		scene.input.on("pointerdown", pointer => {
+		scene.input.on("pointerdown", (pointer) => {
 			this.pointer = pointer;
 			if (
 				!this.throwball &&
@@ -45,7 +45,7 @@ class Player extends Phaser.GameObjects.Group {
 		});
 
 		//Pointer events
-		scene.input.on("pointermove", pointer => {
+		scene.input.on("pointermove", (pointer) => {
 			this.pointer = pointer;
 			if (this.throwball) {
 				this.changeDirectionOnLanding(pointer);
@@ -53,7 +53,7 @@ class Player extends Phaser.GameObjects.Group {
 		});
 
 		//Pointer events
-		scene.input.on("pointerup", pointer => {
+		scene.input.on("pointerup", (pointer) => {
 			this.pointer = pointer;
 			if (this.throwball) {
 				this.throwball = false;
@@ -113,11 +113,11 @@ class Player extends Phaser.GameObjects.Group {
 							bomb.setTexture("items", 2);
 							bomb.setScale(2);
 							bomb.setVisible(true);
-							bomb.setVelocity(100, 100);
+							bomb.setVelocity(50, 50);
 							bomb.enableBody();
 						},
 						callbackScope: this,
-						loop: false
+						loop: false,
 					});
 				}
 			);
@@ -172,7 +172,7 @@ class Player extends Phaser.GameObjects.Group {
 			}
 			const { x, y } = normalise({
 				x: this.velocity.h,
-				y: this.velocity.v
+				y: this.velocity.v,
 			});
 			this.velocity.h = x;
 			this.velocity.v = y;
@@ -302,7 +302,7 @@ class Player extends Phaser.GameObjects.Group {
 			);
 			this.throwVel = {
 				x: Math.cos(rad + Phaser.Math.DegToRad(180)),
-				y: Math.sin(rad + Phaser.Math.DegToRad(180))
+				y: Math.sin(rad + Phaser.Math.DegToRad(180)),
 			};
 			this.arrow.x = out.x;
 			this.arrow.y = out.y;

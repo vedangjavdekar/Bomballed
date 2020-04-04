@@ -9,7 +9,7 @@ class PlayGame extends Phaser.Scene {
 			player: {},
 			score: 0,
 			lives: 3,
-			objects: 4
+			objects: 4,
 		};
 	}
 
@@ -23,14 +23,14 @@ class PlayGame extends Phaser.Scene {
 		this.scoreText = this.add.text(20, 20, "score: ", {
 			fontFamily: "pixelfont",
 			fontSize: "20px",
-			fill: "white"
+			fill: "white",
 		});
 		//lives Text
 		//#ff4d6d
 		this.livesText = this.add.text(20, 45, "lives: x x x", {
 			fontFamily: "pixelfont",
 			fontSize: "20px",
-			fill: "white"
+			fill: "white",
 		});
 
 		//GROUND
@@ -55,7 +55,7 @@ class PlayGame extends Phaser.Scene {
 			bomb.setCircle(8);
 			bomb.setBounce(1);
 			bomb.setCollideWorldBounds(true);
-			bomb.setVelocity(100, 100);
+			bomb.setVelocity(50, 50);
 		}
 		//Collision
 		this.physics.add.collider(this.bombs, this.ground);
@@ -76,7 +76,7 @@ class PlayGame extends Phaser.Scene {
 			ease: "cubic",
 			onComplete: () => {
 				this.scene.start("gameover", { score: this.gameState.score });
-			}
+			},
 		});
 	}
 
@@ -90,7 +90,7 @@ class PlayGame extends Phaser.Scene {
 			ease: "linear",
 			onComplete: () => {
 				blackrect.destroy();
-			}
+			},
 		});
 	}
 

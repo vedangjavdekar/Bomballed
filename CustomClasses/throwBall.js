@@ -1,5 +1,5 @@
-const ballMultiplier = 600;
-const ballBounce = 0.8;
+const ballMultiplier = 700;
+const ballBounce = 0.9;
 
 class ThrowBall extends Phaser.GameObjects.Sprite {
 	constructor(scene, x, y, velocity) {
@@ -44,7 +44,7 @@ class ThrowBall extends Phaser.GameObjects.Sprite {
 				newBomb.setCircle(8);
 				newBomb.setBounce(1);
 				newBomb.setCollideWorldBounds(true);
-				newBomb.setVelocity(100, 100);
+				newBomb.setVelocity(50, 50);
 			}
 			//Update bomb
 			bomb.disableBody();
@@ -68,7 +68,7 @@ class ThrowBall extends Phaser.GameObjects.Sprite {
 							bomb.setTexture("items", 2);
 							bomb.setScale(2);
 							bomb.setVisible(true);
-							bomb.setVelocity(100, 100);
+							bomb.setVelocity(50, 50);
 							bomb.enableBody();
 							timer.remove();
 						},

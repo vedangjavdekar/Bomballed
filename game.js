@@ -6,11 +6,11 @@ const config = {
 	physics: {
 		default: "arcade",
 		arcade: {
-			gravity: { y: 300 },
-			debug: false
-		}
+			gravity: { y: 600 },
+			debug: false,
+		},
 	},
-	scene: [BootGame, MainMenu, Tutorial, PlayGame, GameOver]
+	scene: [BootGame, MainMenu, Tutorial, PlayGame, GameOver],
 };
 
 window.onload = () => {
