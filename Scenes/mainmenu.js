@@ -6,7 +6,7 @@ class MainMenu extends Phaser.Scene {
 
 	create() {
 		this.add
-			.image(config.width / 2 - 140, config.height / 2 - 50, "items", 2)
+			.image(config.width / 2 - 140, config.height / 2 - 50, "items", 3)
 			.setScale(2);
 
 		this.add
@@ -16,8 +16,8 @@ class MainMenu extends Phaser.Scene {
 		let title = this.add
 			.text(config.width / 2, config.height / 2 - 50, "BOMBALLED", {
 				fontFamily: "pixelfont",
-				fontSize: "36px",
-				fill: "white"
+				fontSize: "48px",
+				fill: "white",
 			})
 			.setOrigin(0.5);
 
@@ -26,8 +26,8 @@ class MainMenu extends Phaser.Scene {
 		let play = this.add
 			.text(config.width / 2, config.height / 2 + 30, "PLAY", {
 				fontFamily: "pixelfont",
-				fontSize: "24px",
-				fill: "white"
+				fontSize: "36px",
+				fill: "white",
 			})
 			.setOrigin(0.5)
 			.setInteractive();
@@ -35,18 +35,18 @@ class MainMenu extends Phaser.Scene {
 		let tutorial = this.add
 			.text(config.width / 2, config.height / 2 + 80, "TUTORIAL", {
 				fontFamily: "pixelfont",
-				fontSize: "20px",
-				fill: "white"
+				fontSize: "28px",
+				fill: "white",
 			})
 			.setOrigin(0.5)
 			.setInteractive();
 
 		play.on("pointerover", () => {
-			play.setFontSize(30);
+			play.setFontSize(40);
 			play.setTint(0x454545);
 		});
 		play.on("pointerout", () => {
-			play.setFontSize(24);
+			play.setFontSize(38);
 			play.setTint(0xffffff);
 		});
 		play.on("pointerdown", () => {
@@ -59,16 +59,16 @@ class MainMenu extends Phaser.Scene {
 				ease: "cubic",
 				onComplete: () => {
 					this.scene.start("playgame");
-				}
+				},
 			});
 		});
 
 		tutorial.on("pointerover", () => {
-			tutorial.setFontSize(24);
+			tutorial.setFontSize(30);
 			tutorial.setTint(0x454545);
 		});
 		tutorial.on("pointerout", () => {
-			tutorial.setFontSize(20);
+			tutorial.setFontSize(28);
 			tutorial.setTint(0xffffff);
 		});
 		tutorial.on("pointerdown", () => {
@@ -81,7 +81,7 @@ class MainMenu extends Phaser.Scene {
 				ease: "cubic",
 				onComplete: () => {
 					this.scene.start("tutorial");
-				}
+				},
 			});
 		});
 
@@ -94,7 +94,7 @@ class MainMenu extends Phaser.Scene {
 			ease: "cubic",
 			onComplete: () => {
 				blackrect.destroy();
-			}
+			},
 		});
 	}
 

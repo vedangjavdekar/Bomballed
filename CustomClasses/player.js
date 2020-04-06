@@ -13,7 +13,7 @@ class Player extends Phaser.GameObjects.Group {
 			.setScale(4)
 			.play("player_idle");
 
-		this.arrow = this.create(64, 0, "items", 3);
+		this.arrow = this.create(64, 0, "items", 4);
 		this.arrow.setVisible(false);
 		//scene.add.existing(this);
 		scene.physics.add.existing(this.player);
@@ -85,6 +85,10 @@ class Player extends Phaser.GameObjects.Group {
 				if (this.ball) {
 					this.ball.destroy();
 				}
+				scene.input.off("pointerdown");
+				scene.input.off("pointermove");
+				scene.input.off("pointerup");
+				scene.events.emit("fadeOut");
 				return;
 			}
 			//Update bomb
@@ -110,7 +114,7 @@ class Player extends Phaser.GameObjects.Group {
 								game.config.width,
 								game.config.height / 2 - 32
 							);
-							bomb.setTexture("items", 2);
+							bomb.setTexture("items", 3);
 							bomb.setScale(2);
 							bomb.setVisible(true);
 							bomb.setVelocity(50, 50);

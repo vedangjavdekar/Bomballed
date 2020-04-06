@@ -30,9 +30,15 @@ class ThrowBall extends Phaser.GameObjects.Sprite {
 			}
 			scene.gameState.score++;
 			if (scene.gameState.score % 10 === 0) {
-				scene.gameState.lives++;
+				let heart = new PickUp(scene);
+				scene.physics.add.overlap(heart, scene.player, () => {
+					scene.gameState.lives++;
+					heart.destroy();
+				});
+			}
+			if (scene.gameState.score % 20 === 0) {
 				let newBomb = scene.physics.add
-					.sprite(16, 16, "items", 2)
+					.sprite(16, 16, "items", 3)
 					.setScale(2);
 				scene.bombs.add(newBomb);
 				newBomb.setRandomPosition(
@@ -46,6 +52,7 @@ class ThrowBall extends Phaser.GameObjects.Sprite {
 				newBomb.setCollideWorldBounds(true);
 				newBomb.setVelocity(50, 50);
 			}
+
 			//Update bomb
 			bomb.disableBody();
 			bomb.setScale(1);
@@ -65,7 +72,7 @@ class ThrowBall extends Phaser.GameObjects.Sprite {
 								game.config.width,
 								game.config.height / 2 - 32
 							);
-							bomb.setTexture("items", 2);
+							bomb.setTexture("items", 3);
 							bomb.setScale(2);
 							bomb.setVisible(true);
 							bomb.setVelocity(50, 50);
