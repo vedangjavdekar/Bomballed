@@ -4,7 +4,18 @@ const PLAYER = {
 	neg_air_speed: 80,
 	jump_force: 380,
 	dash_speed: 600,
+	arrow_col: 0xff7b57,
 };
+
+const WEAPONS = [
+	{ frame: 0, text: "Ball", animation: "player_throw_ball" },
+	{
+		frame: 1,
+		text: "Boomerang",
+		animation: "player_throw_boomerang",
+		timer: true,
+	},
+];
 
 class Player extends Phaser.GameObjects.Group {
 	constructor(scene) {
@@ -13,7 +24,7 @@ class Player extends Phaser.GameObjects.Group {
 			.setScale(4)
 			.play("player_idle");
 
-		this.arrow = this.create(64, 0, "items", 4);
+		this.arrow = this.create(64, 0, "triangle");
 		this.arrow.setVisible(false);
 		//scene.add.existing(this);
 		scene.physics.add.existing(this.player);
@@ -34,13 +45,33 @@ class Player extends Phaser.GameObjects.Group {
 		//Pointer events
 		scene.input.on("pointerdown", (pointer) => {
 			this.pointer = pointer;
-			if (
-				!this.throwball &&
-				pointer.buttons === 1 &&
-				this.ballCount > 0
-			) {
-				this.throwball = true;
-				this.changeDirectionOnLanding(pointer);
+			if (pointer.rightButtonDown()) {
+				this.changeWeapon(scene);
+			} else {
+				if (
+					!this.throwball &&
+					pointer.buttons === 1 &&
+					this.ballCount > 0
+				) {
+					this.throwball = true;
+					if (WEAPONS[this.weaponIndex].timer) {
+						var color = Phaser.Display.Color.GetColor(149, 247, 79);
+						QuadColor(this.arrow, color);
+
+						this.ballTimer = scene.time.addEvent({
+							delay: 100,
+							callback: this.timerOnTick,
+							callbackScope: this,
+							loop: true,
+						});
+					} else {
+						var color = Phaser.Display.Color.HexStringToColor(
+							PLAYER.arrow_col.toString(16)
+						).color;
+						QuadColor(this.arrow, color);
+					}
+					this.changeDirectionOnLanding(pointer);
+				}
 			}
 		});
 
@@ -59,20 +90,19 @@ class Player extends Phaser.GameObjects.Group {
 				this.throwball = false;
 				if (!this.inAir) {
 					this.ballCount--;
-					this.ball = new ThrowBall(
-						scene,
-						this.arrow.x,
-						this.arrow.y,
-						this.throwVel
-					);
-					ballPhysics(scene, this.ball);
+					this.ball = this.spawnWeapon(scene);
+					this.power = 0;
+					if (WEAPONS[this.weaponIndex].timer) {
+						this.ballTimer.remove();
+					}
+					this.ball.colliderObj = ballPhysics(scene, this.ball);
 
 					//Add collider for ball and player
 					scene.physics.add.overlap(
 						this.player,
 						this.ball,
 						(player, ball) => {
-							ball.destroy();
+							this.ball.destroy();
 							this.ballCount++;
 						}
 					);
@@ -117,7 +147,7 @@ class Player extends Phaser.GameObjects.Group {
 								game.config.width,
 								game.config.height / 2 - 32
 							);
-							bomb.setTexture("items", 3);
+							bomb.setTexture("items", 1);
 							bomb.setScale(2);
 							bomb.setVisible(true);
 							bomb.setVelocity(50, 50);
@@ -140,8 +170,37 @@ class Player extends Phaser.GameObjects.Group {
 		this.onLandingChange = false;
 
 		//Ball params
+		this.weaponIndex = 0;
 		this.ballCount = 1;
 		this.throwVel = { x: 0, y: 0 };
+		this.power = 0;
+		this.ballTimer = null;
+	}
+
+	timerOnTick() {
+		if (!this.inAir) {
+			if (this.power < 1) {
+				this.power += 0.1;
+				let color = Phaser.Display.Color.Interpolate.RGBWithRGB(
+					149,
+					247,
+					79,
+					240,
+					65,
+					65,
+					100,
+					this.power * 100
+				);
+				color = Phaser.Display.Color.GetColor(
+					color.r,
+					color.g,
+					color.b
+				);
+				QuadColor(this.arrow, color);
+			} else {
+				this.power = 1;
+			}
+		}
 	}
 
 	changeDirectionOnLanding(pointer) {
@@ -279,7 +338,7 @@ class Player extends Phaser.GameObjects.Group {
 					this.player.play("player_idle", true);
 				}
 			} else {
-				this.player.play("player_throw", false);
+				this.player.play(WEAPONS[this.weaponIndex].animation, false);
 			}
 		}
 	}
@@ -319,6 +378,48 @@ class Player extends Phaser.GameObjects.Group {
 		}
 	}
 
+	changeWeapon(scene) {
+		this.weaponIndex = (this.weaponIndex + 1) % WEAPONS.length;
+		scene.currWeapon.setTexture("weapons", WEAPONS[this.weaponIndex].frame);
+		scene.currWeaponText.text = WEAPONS[this.weaponIndex].text;
+	}
+
+	destroyOnWorldBounds() {
+		if (
+			this.ball.x < 0 ||
+			this.ball.x > config.width ||
+			this.ball.y < 0 ||
+			this.ball.y > config.height
+		) {
+			this.ball.destroy();
+			this.ballCount++;
+		}
+	}
+
+	spawnWeapon(scene) {
+		switch (this.weaponIndex) {
+			case 0: {
+				return new ThrowBall(
+					scene,
+					this.arrow.x,
+					this.arrow.y,
+					this.throwVel
+				);
+			}
+			case 1: {
+				return new Boomerang(
+					scene,
+					this.arrow.x,
+					this.arrow.y,
+					this.throwVel,
+					this.power
+				);
+			}
+			default:
+				return null;
+		}
+	}
+
 	update() {
 		this.movement();
 		this.animation();
@@ -329,66 +430,72 @@ class Player extends Phaser.GameObjects.Group {
 const LIVE_SPAWN = 10;
 const BOMB_SPAWN = 15;
 function ballPhysics(scene, ball) {
-	scene.physics.add.overlap(ball, scene.bombs, (ball, bomb) => {
-		if (scene.gameState.lives === 0) {
-			ball.destroy();
-			return;
-		}
-		scene.gameState.score++;
-		if (scene.gameState.score % LIVE_SPAWN === 0) {
-			let heart = new PickUp(scene);
-			scene.physics.add.overlap(heart, scene.player, () => {
-				scene.gameState.lives++;
-				heart.destroy();
-			});
-		}
-		if (scene.gameState.score % BOMB_SPAWN === 0) {
-			let newBomb = scene.physics.add
-				.sprite(16, 16, "items", 3)
-				.setScale(2);
-			scene.bombs.add(newBomb);
-			newBomb.setRandomPosition(
-				0,
-				0,
-				game.config.width,
-				game.config.height / 2 - 32
-			);
-			newBomb.setCircle(8);
-			newBomb.setBounce(1);
-			newBomb.setCollideWorldBounds(true);
-			newBomb.setVelocity(50, 50);
-		}
-
-		//Update bomb
-		bomb.disableBody();
-		bomb.setScale(1);
-		bomb.setTexture("explosion");
-		bomb.play("explosion", false);
-		bomb.once(
-			"animationcomplete", //Phaser.Animations.Events.SPRITE_ANIMATION_COMPLETE
-			() => {
-				//scene.bombs.remove(bomb, true, true);
-				var timer = scene.time.addEvent({
-					delay: 1000,
-					callback: () => {
-						if (scene.gameState.lives === 0) return;
-						bomb.setRandomPosition(
-							0,
-							0,
-							game.config.width,
-							game.config.height / 2 - 32
-						);
-						bomb.setTexture("items", 3);
-						bomb.setScale(2);
-						bomb.setVisible(true);
-						bomb.setVelocity(50, 50);
-						bomb.enableBody();
-						timer.remove();
-					},
-					callbackScope: this,
-					loop: false,
+	var collider = scene.physics.add.overlap(
+		ball,
+		scene.bombs,
+		(ball, bomb) => {
+			if (scene.gameState.lives === 0) {
+				ball.destroy();
+				return;
+			}
+			scene.gameState.score++;
+			if (scene.gameState.score % LIVE_SPAWN === 0) {
+				let heart = new PickUp(scene);
+				scene.physics.add.overlap(heart, scene.player, () => {
+					scene.gameState.lives++;
+					heart.destroy();
 				});
 			}
-		);
-	});
+			if (scene.gameState.score % BOMB_SPAWN === 0) {
+				let newBomb = scene.physics.add
+					.sprite(16, 16, "items", 1)
+					.setScale(2);
+				scene.bombs.add(newBomb);
+				newBomb.setRandomPosition(
+					0,
+					0,
+					game.config.width,
+					game.config.height / 2 - 32
+				);
+				newBomb.setCircle(8);
+				newBomb.setBounce(1);
+				newBomb.setCollideWorldBounds(true);
+				newBomb.setVelocity(50, 50);
+			}
+
+			//Update bomb
+			bomb.disableBody();
+			bomb.setScale(1);
+			bomb.setTexture("explosion");
+			bomb.play("explosion", false);
+			bomb.once(
+				"animationcomplete", //Phaser.Animations.Events.SPRITE_ANIMATION_COMPLETE
+				() => {
+					//scene.bombs.remove(bomb, true, true);
+					var timer = scene.time.addEvent({
+						delay: 1000,
+						callback: () => {
+							if (scene.gameState.lives === 0) return;
+							bomb.setRandomPosition(
+								0,
+								0,
+								game.config.width,
+								game.config.height / 2 - 32
+							);
+							bomb.setTexture("items", 1);
+							bomb.setScale(2);
+							bomb.setVisible(true);
+							bomb.setVelocity(50, 50);
+							bomb.enableBody();
+							timer.remove();
+						},
+						callbackScope: this,
+						loop: false,
+					});
+				}
+			);
+		}
+	);
+
+	return collider;
 }

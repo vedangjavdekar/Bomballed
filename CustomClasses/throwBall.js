@@ -5,7 +5,7 @@ class ThrowBall extends Phaser.GameObjects.Sprite {
 	constructor(scene, x, y, velocity) {
 		const a = x ? x : 0;
 		const b = y ? y : 0;
-		super(scene, a, b, "items", 1);
+		super(scene, a, b, "weapons", 0);
 		scene.add.existing(this);
 		scene.physics.add.existing(this);
 		this.setScale(2);

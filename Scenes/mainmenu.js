@@ -6,11 +6,11 @@ class MainMenu extends Phaser.Scene {
 
 	create() {
 		this.add
-			.image(config.width / 2 - 140, config.height / 2 - 50, "items", 3)
+			.image(config.width / 2 - 140, config.height / 2 - 50, "items", 1)
 			.setScale(2);
 
 		this.add
-			.image(config.width / 2 + 140, config.height / 2 - 50, "items", 1)
+			.image(config.width / 2 + 140, config.height / 2 - 50, "weapons", 0)
 			.setScale(2);
 
 		let title = this.add

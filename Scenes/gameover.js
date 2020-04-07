@@ -6,7 +6,6 @@ class GameOver extends Phaser.Scene {
 
 	create(data) {
 		const best = localStorage.getItem("bomballed_highScore");
-		console.log(best);
 		this.add
 			.text(config.width / 2, 50, "GAME OVER", {
 				fontFamily: "pixelfont",
