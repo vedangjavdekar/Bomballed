@@ -74,7 +74,7 @@ class Tutorial extends Phaser.Scene {
 			.text(
 				170,
 				270,
-				"Every 10 points, you will gain an additional life.\nBut a bomb will be added too! Play safe!",
+				"Periodically Lives will be spawned.\nBut bombs will be added too! Play safe!",
 				{
 					font: "24px pixelfont",
 					fill: "#454545",

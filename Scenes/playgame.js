@@ -26,11 +26,23 @@ class PlayGame extends Phaser.Scene {
 				fill: "white",
 			})
 			.setOrigin(0.5, 0);
+
+		let graphics = this.add.graphics();
+		graphics.fillStyle(0x232323, 1);
+		graphics.fillRoundedRect(10, 20, 40, 40, 10);
+
+		this.add.image(30, 40, "items", 1).setScale(2).setOrigin(0.5);
+		this.currWeaponText = this.add
+			.text(60, 25, `Ball`, {
+				font: "30px pixelfont",
+				fill: "white",
+			})
+			.setOrigin(0, 0.5);
+
 		//lives Text
-		//#ff4d6d
-		this.add.image(10, 45, "items", 5).setScale(1.5).setOrigin(0.5);
+		this.add.image(70, 45, "items", 5).setScale(1.5).setOrigin(0.5);
 		this.livesText = this.add
-			.text(30, 48, `x${this.gameState.lives}`, {
+			.text(90, 48, `x${this.gameState.lives}`, {
 				font: "30px pixelfont",
 				fill: "white",
 			})
