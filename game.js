@@ -8,6 +8,12 @@ const config = {
 		arcade: {
 			gravity: { y: 600 },
 			debug: false,
+			checkCollision: {
+				up: false,
+				down: true,
+				left: true,
+				right: true,
+			},
 		},
 	},
 	scene: [BootGame, MainMenu, Tutorial, PlayGame, GameOver],

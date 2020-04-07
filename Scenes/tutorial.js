@@ -26,27 +26,28 @@ class Tutorial extends Phaser.Scene {
 
 		this.add.sprite(360, 70, "mouse", 0).setScale(2).setOrigin(0.5, 0);
 		this.add.sprite(360, 110, "mouse", 1).setScale(2).setOrigin(0.5, 0);
-		this.add
-			.text(400, 90, "aim: hold and move\nShoot: release", {
-				font: "24px pixelfont",
-				fill: "white",
-				wordWrap: { width: 250 },
-			})
-			.setOrigin(0, 0.5);
+		this.add.text(400, 70, "aim: hold and move\nShoot: release", {
+			font: "24px pixelfont",
+			fill: "white",
+			wordWrap: { width: 250 },
+		});
 
-		this.add
-			.text(400, 130, "Change Weapon: click", {
+		this.add.text(
+			400,
+			110,
+			"Change Weapon: click\nCharged throw: hold down n release",
+			{
 				font: "24px pixelfont",
 				fill: "white",
 				wordWrap: { width: 250 },
-			})
-			.setOrigin(0, 0.5);
+			}
+		);
 
 		this.add
 			.text(
 				170,
 				70,
-				"Avoid as many bombs as possible.\nExplode them with your ball to gain points and lives.",
+				"Avoid as many bombs as possible.\nExplode them with your weapon to gain points and lives.",
 				{
 					font: "24px pixelfont",
 					fill: "#454545",

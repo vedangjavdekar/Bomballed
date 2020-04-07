@@ -1,5 +1,13 @@
 //UTILS
 
+//set quad color
+const QuadColor = (quad, color) => {
+	quad.tintTopLeft = color;
+	quad.tintTopRight = color;
+	quad.tintBottomLeft = color;
+	quad.tintBottomRight = color;
+};
+
 //math helper utility
 const normalise = (velocity) => {
 	const mag = Math.sqrt(Math.pow(velocity.x, 2) + Math.pow(velocity.y, 2));

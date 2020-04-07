@@ -4,11 +4,17 @@ const PLAYER = {
 	neg_air_speed: 80,
 	jump_force: 380,
 	dash_speed: 600,
+	arrow_col: 0xff7b57,
 };
 
 const WEAPONS = [
 	{ frame: 0, text: "Ball", animation: "player_throw_ball" },
-	{ frame: 1, text: "Boomerang", animation: "player_throw_boomerang" },
+	{
+		frame: 1,
+		text: "Boomerang",
+		animation: "player_throw_boomerang",
+		timer: true,
+	},
 ];
 
 class Player extends Phaser.GameObjects.Group {
@@ -18,7 +24,7 @@ class Player extends Phaser.GameObjects.Group {
 			.setScale(4)
 			.play("player_idle");
 
-		this.arrow = this.create(64, 0, "items", 2);
+		this.arrow = this.create(64, 0, "triangle");
 		this.arrow.setVisible(false);
 		//scene.add.existing(this);
 		scene.physics.add.existing(this.player);
@@ -48,6 +54,22 @@ class Player extends Phaser.GameObjects.Group {
 					this.ballCount > 0
 				) {
 					this.throwball = true;
+					if (WEAPONS[this.weaponIndex].timer) {
+						var color = Phaser.Display.Color.GetColor(149, 247, 79);
+						QuadColor(this.arrow, color);
+
+						this.ballTimer = scene.time.addEvent({
+							delay: 100,
+							callback: this.timerOnTick,
+							callbackScope: this,
+							loop: true,
+						});
+					} else {
+						var color = Phaser.Display.Color.HexStringToColor(
+							PLAYER.arrow_col.toString(16)
+						).color;
+						QuadColor(this.arrow, color);
+					}
 					this.changeDirectionOnLanding(pointer);
 				}
 			}
@@ -69,6 +91,10 @@ class Player extends Phaser.GameObjects.Group {
 				if (!this.inAir) {
 					this.ballCount--;
 					this.ball = this.spawnWeapon(scene);
+					this.power = 0;
+					if (WEAPONS[this.weaponIndex].timer) {
+						this.ballTimer.remove();
+					}
 					this.ball.colliderObj = ballPhysics(scene, this.ball);
 
 					//Add collider for ball and player
@@ -76,7 +102,7 @@ class Player extends Phaser.GameObjects.Group {
 						this.player,
 						this.ball,
 						(player, ball) => {
-							ball.destroy();
+							this.ball.destroy();
 							this.ballCount++;
 						}
 					);
@@ -147,6 +173,34 @@ class Player extends Phaser.GameObjects.Group {
 		this.weaponIndex = 0;
 		this.ballCount = 1;
 		this.throwVel = { x: 0, y: 0 };
+		this.power = 0;
+		this.ballTimer = null;
+	}
+
+	timerOnTick() {
+		if (!this.inAir) {
+			if (this.power < 1) {
+				this.power += 0.1;
+				let color = Phaser.Display.Color.Interpolate.RGBWithRGB(
+					149,
+					247,
+					79,
+					240,
+					65,
+					65,
+					100,
+					this.power * 100
+				);
+				color = Phaser.Display.Color.GetColor(
+					color.r,
+					color.g,
+					color.b
+				);
+				QuadColor(this.arrow, color);
+			} else {
+				this.power = 1;
+			}
+		}
 	}
 
 	changeDirectionOnLanding(pointer) {
@@ -357,7 +411,8 @@ class Player extends Phaser.GameObjects.Group {
 					scene,
 					this.arrow.x,
 					this.arrow.y,
-					this.throwVel
+					this.throwVel,
+					this.power
 				);
 			}
 			default:

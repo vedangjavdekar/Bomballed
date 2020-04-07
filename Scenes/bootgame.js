@@ -10,6 +10,11 @@ class BootGame extends Phaser.Scene {
 		graphics.generateTexture("blackrect", config.width, config.height);
 		graphics.clear();
 
+		graphics.fillStyle(0xffffff, 1);
+		graphics.fillTriangle(0, 0, 8 * Math.sqrt(3), 8, 0, 16);
+		graphics.generateTexture("triangle", 16, 16);
+		graphics.clear();
+
 		this.load.image("background", "Assets/Sprites/sky.png");
 
 		this.load.spritesheet("player", "Assets/Sprites/player.png", {
