@@ -1,7 +1,7 @@
 //UTILS
 
 //math helper utility
-const normalise = velocity => {
+const normalise = (velocity) => {
 	const mag = Math.sqrt(Math.pow(velocity.x, 2) + Math.pow(velocity.y, 2));
 	mag !== 0 ? (velocity.x /= mag) : (velocity.y = 0);
 	mag !== 0 ? (velocity.y /= mag) : (velocity.y = 0);

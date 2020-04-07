@@ -24,15 +24,23 @@ class Tutorial extends Phaser.Scene {
 			})
 			.setOrigin(0.5, 0);
 
-		this.add.image(360, 70, "mouse").setScale(2).setOrigin(0.5, 0);
-
+		this.add.sprite(360, 70, "mouse", 0).setScale(2).setOrigin(0.5, 0);
+		this.add.sprite(360, 110, "mouse", 1).setScale(2).setOrigin(0.5, 0);
 		this.add
-			.text(500, 70, "aim: hold and move\nShoot: release", {
+			.text(400, 90, "aim: hold and move\nShoot: release", {
 				font: "24px pixelfont",
 				fill: "white",
 				wordWrap: { width: 250 },
 			})
-			.setOrigin(0.5, 0);
+			.setOrigin(0, 0.5);
+
+		this.add
+			.text(400, 130, "Change Weapon: click", {
+				font: "24px pixelfont",
+				fill: "white",
+				wordWrap: { width: 250 },
+			})
+			.setOrigin(0, 0.5);
 
 		this.add
 			.text(
@@ -49,10 +57,10 @@ class Tutorial extends Phaser.Scene {
 			.setOrigin(0.5, 0);
 
 		graphics.fillStyle(0xff4d4d);
-		graphics.fillRoundedRect(102, 182, 36, 36, 5);
-		this.add.sprite(120, 200, "items", 3).setScale(2);
+		graphics.fillRoundedRect(70, 182, 36, 36, 5);
+		this.add.sprite(88, 200, "items", 1).setScale(2);
 		this.add
-			.text(120, 230, "Avoid", {
+			.text(88, 230, "Avoid", {
 				font: "20px pixelfont",
 				fill: "#ff4d4d",
 				align: "center",
@@ -60,12 +68,25 @@ class Tutorial extends Phaser.Scene {
 			.setOrigin(0.5, 0);
 
 		graphics.fillStyle(0x454545);
-		graphics.fillRoundedRect(202, 182, 36, 36, 5);
-		this.add.sprite(220, 200, "items", 1).setScale(2);
+		graphics.fillRoundedRect(130, 182, 36, 36, 5);
+		this.add.sprite(148, 200, "weapons", 0).setScale(2);
+
+		graphics.fillRoundedRect(130, 230, 36, 36, 5);
+		this.add.sprite(148, 248, "weapons", 1).setScale(2);
 		this.add
-			.text(220, 230, "Weapon", {
+			.text(148, 270, "Weapons", {
 				font: "20px pixelfont",
 				fill: "#454545",
+				align: "center",
+			})
+			.setOrigin(0.5, 0);
+
+		graphics.fillRoundedRect(192, 182, 36, 36, 5);
+		this.add.sprite(210, 200, "items", 3).setScale(2);
+		this.add
+			.text(210, 230, "Lives", {
+				font: "20px pixelfont",
+				fill: "#ff4848",
 				align: "center",
 			})
 			.setOrigin(0.5, 0);
@@ -73,7 +94,7 @@ class Tutorial extends Phaser.Scene {
 		this.add
 			.text(
 				170,
-				270,
+				300,
 				"Periodically Lives will be spawned.\nBut bombs will be added too! Play safe!",
 				{
 					font: "24px pixelfont",
@@ -153,7 +174,7 @@ class Tutorial extends Phaser.Scene {
 
 		this.tweens.add({
 			targets: dash,
-			y: 180,
+			y: 140,
 			duration: 300,
 			ease: "linear",
 			repeat: -1,
@@ -173,7 +194,7 @@ class Tutorial extends Phaser.Scene {
 		keys.add(jump);
 		keys.add(dash);
 		keys.x = 425;
-		keys.y = 250;
+		keys.y = 300;
 
 		let back = this.add
 			.text(30, 440, "< Back", {
