@@ -20,18 +20,33 @@ class PlayGame extends Phaser.Scene {
 			.setOrigin(0, 0);
 
 		//Score Text
-		this.scoreText = this.add.text(20, 20, "score: ", {
-			fontFamily: "pixelfont",
-			fontSize: "20px",
-			fill: "white",
-		});
+		this.scoreText = this.add
+			.text(game.config.width / 2, 20, "score: ", {
+				font: "36px pixelfont",
+				fill: "white",
+			})
+			.setOrigin(0.5, 0);
+
+		let graphics = this.add.graphics();
+		graphics.fillStyle(0x232323, 1);
+		graphics.fillRoundedRect(10, 20, 40, 40, 10);
+
+		this.add.image(30, 40, "items", 1).setScale(2).setOrigin(0.5);
+		this.currWeaponText = this.add
+			.text(60, 25, `Ball`, {
+				font: "30px pixelfont",
+				fill: "white",
+			})
+			.setOrigin(0, 0.5);
+
 		//lives Text
-		//#ff4d6d
-		this.livesText = this.add.text(20, 45, "lives: x x x", {
-			fontFamily: "pixelfont",
-			fontSize: "20px",
-			fill: "white",
-		});
+		this.add.image(70, 45, "items", 5).setScale(1.5).setOrigin(0.5);
+		this.livesText = this.add
+			.text(90, 48, `x${this.gameState.lives}`, {
+				font: "30px pixelfont",
+				fill: "white",
+			})
+			.setOrigin(0, 0.5);
 
 		//GROUND
 		const gnd = this.add
@@ -44,7 +59,7 @@ class PlayGame extends Phaser.Scene {
 		//physics objects
 		this.bombs = this.physics.add.group();
 		for (let i = 0; i < this.gameState.objects; i++) {
-			let bomb = this.physics.add.sprite(16, 16, "items", 2).setScale(2);
+			let bomb = this.physics.add.sprite(16, 16, "items", 3).setScale(2);
 			this.bombs.add(bomb);
 			bomb.setRandomPosition(
 				0,
@@ -96,13 +111,12 @@ class PlayGame extends Phaser.Scene {
 
 	update() {
 		if (this.gameState.lives === 0) {
-			this.events.emit("fadeOut");
 			return;
 		}
 		this.background.tilePositionX += 0.5;
 		this.player.update();
-		this.scoreText.text = "score: " + this.gameState.score;
-		this.livesText.text = this.livesUpdate();
+		this.scoreText.text = this.gameState.score;
+		this.livesText.text = "x" + this.gameState.lives;
 	}
 
 	moveItems(item, speed) {
@@ -111,13 +125,5 @@ class PlayGame extends Phaser.Scene {
 			item.x = Phaser.Math.Between(0, config.width);
 			item.y = 0;
 		}
-	}
-
-	livesUpdate() {
-		let s = "";
-		for (let x = 0; x < this.gameState.lives; x++) {
-			s += " x";
-		}
-		return "lives: " + s;
 	}
 }

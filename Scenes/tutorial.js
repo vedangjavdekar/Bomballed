@@ -13,27 +13,24 @@ class Tutorial extends Phaser.Scene {
 		this.add
 			.text(170, 30, "Objective", {
 				font: "24px pixelfont",
-				fill: "#454545"
+				fill: "#454545",
 			})
 			.setOrigin(0.5, 0);
 
 		this.add
 			.text(450, 30, "CONTROLS", {
 				font: "24px pixelfont",
-				fill: "white"
+				fill: "white",
 			})
 			.setOrigin(0.5, 0);
 
-		this.add
-			.image(380, 70, "mouse")
-			.setScale(2)
-			.setOrigin(0.5, 0);
+		this.add.image(360, 70, "mouse").setScale(2).setOrigin(0.5, 0);
 
 		this.add
 			.text(500, 70, "aim: hold and move\nShoot: release", {
-				font: "16px pixelfont",
+				font: "24px pixelfont",
 				fill: "white",
-				wordWrap: { width: 250 }
+				wordWrap: { width: 250 },
 			})
 			.setOrigin(0.5, 0);
 
@@ -43,46 +40,46 @@ class Tutorial extends Phaser.Scene {
 				70,
 				"Avoid as many bombs as possible.\nExplode them with your ball to gain points and lives.",
 				{
-					font: "20px pixelfont",
+					font: "24px pixelfont",
 					fill: "#454545",
 					wordWrap: { width: 280 },
-					lineSpacing: 5
+					lineSpacing: 5,
 				}
 			)
 			.setOrigin(0.5, 0);
 
 		graphics.fillStyle(0xff4d4d);
-		graphics.fillRoundedRect(102, 232, 36, 36, 5);
-		this.add.sprite(120, 250, "items", 2).setScale(2);
+		graphics.fillRoundedRect(102, 182, 36, 36, 5);
+		this.add.sprite(120, 200, "items", 3).setScale(2);
 		this.add
-			.text(120, 280, "Avoid", {
-				font: "16px pixelfont",
+			.text(120, 230, "Avoid", {
+				font: "20px pixelfont",
 				fill: "#ff4d4d",
-				align: "center"
+				align: "center",
 			})
 			.setOrigin(0.5, 0);
 
 		graphics.fillStyle(0x454545);
-		graphics.fillRoundedRect(202, 232, 36, 36, 5);
-		this.add.sprite(220, 250, "items", 1).setScale(2);
+		graphics.fillRoundedRect(202, 182, 36, 36, 5);
+		this.add.sprite(220, 200, "items", 1).setScale(2);
 		this.add
-			.text(220, 280, "Weapon", {
-				font: "16px pixelfont",
+			.text(220, 230, "Weapon", {
+				font: "20px pixelfont",
 				fill: "#454545",
-				align: "center"
+				align: "center",
 			})
 			.setOrigin(0.5, 0);
 
 		this.add
 			.text(
 				170,
-				320,
-				"Every 10 points, you will gain an additional life.\nBut a bomb will be added too! Play safe!",
+				270,
+				"Periodically Lives will be spawned.\nBut bombs will be added too! Play safe!",
 				{
-					font: "16px pixelfont",
+					font: "24px pixelfont",
 					fill: "#454545",
 					wordWrap: { width: 280 },
-					lineSpacing: 5
+					lineSpacing: 5,
 				}
 			)
 			.setOrigin(0.5, 0);
@@ -91,29 +88,29 @@ class Tutorial extends Phaser.Scene {
 		let key_W = this.add.image(42, 0, "keys", 0).setScale(2);
 		let W_text = this.add
 			.text(42, -40, "Jump", {
-				font: "16px pixelfont",
-				fill: "white"
+				font: "20px pixelfont",
+				fill: "white",
 			})
 			.setOrigin(0.5, 0);
 		let key_S = this.add.image(42, 42, "keys", 1).setScale(2);
 		let S_text = this.add
 			.text(42, 62, "Dash", {
-				font: "16px pixelfont",
-				fill: "white"
+				font: "20px pixelfont",
+				fill: "white",
 			})
 			.setOrigin(0.5, 0);
 		let key_A = this.add.image(0, 42, "keys", 2).setScale(2);
 		let A_text = this.add
 			.text(-10, 62, "Left", {
-				font: "16px pixelfont",
-				fill: "white"
+				font: "20px pixelfont",
+				fill: "white",
 			})
 			.setOrigin(0.5, 0);
 		let key_D = this.add.image(84, 42, "keys", 3).setScale(2);
 		let D_text = this.add
 			.text(98, 62, "Right", {
-				font: "16px pixelfont",
-				fill: "white"
+				font: "20px pixelfont",
+				fill: "white",
 			})
 			.setOrigin(0.5, 0);
 
@@ -138,7 +135,7 @@ class Tutorial extends Phaser.Scene {
 			x: 12,
 			duration: 600,
 			ease: "linear",
-			repeat: -1
+			repeat: -1,
 		});
 		this.tweens.add({
 			targets: jump,
@@ -146,7 +143,7 @@ class Tutorial extends Phaser.Scene {
 			duration: 300,
 			ease: "linear",
 			repeat: -1,
-			yoyo: true
+			yoyo: true,
 		});
 
 		let dash = this.add
@@ -159,7 +156,7 @@ class Tutorial extends Phaser.Scene {
 			y: 180,
 			duration: 300,
 			ease: "linear",
-			repeat: -1
+			repeat: -1,
 		});
 
 		keys.add(key_W);
@@ -180,17 +177,17 @@ class Tutorial extends Phaser.Scene {
 
 		let back = this.add
 			.text(30, 440, "< Back", {
-				font: "24px pixelfont",
-				fill: "white"
+				font: "36px pixelfont",
+				fill: "white",
 			})
 			.setOrigin(0, 0.5)
 			.setInteractive();
 
 		back.on("pointerover", () => {
-			back.setFontSize("26px");
+			back.setFontSize("40px");
 		});
 		back.on("pointerout", () => {
-			back.setFontSize("24px");
+			back.setFontSize("36px");
 		});
 
 		back.on("pointerdown", () => {
@@ -203,7 +200,7 @@ class Tutorial extends Phaser.Scene {
 				ease: "cubic",
 				onComplete: () => {
 					this.scene.start("mainmenu");
-				}
+				},
 			});
 		});
 
@@ -216,7 +213,7 @@ class Tutorial extends Phaser.Scene {
 			ease: "linear",
 			onComplete: () => {
 				blackrect.destroy();
-			}
+			},
 		});
 	}
 }

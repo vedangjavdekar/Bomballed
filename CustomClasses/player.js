@@ -13,7 +13,7 @@ class Player extends Phaser.GameObjects.Group {
 			.setScale(4)
 			.play("player_idle");
 
-		this.arrow = this.create(64, 0, "items", 3);
+		this.arrow = this.create(64, 0, "items", 4);
 		this.arrow.setVisible(false);
 		//scene.add.existing(this);
 		scene.physics.add.existing(this.player);
@@ -65,6 +65,8 @@ class Player extends Phaser.GameObjects.Group {
 						this.arrow.y,
 						this.throwVel
 					);
+					ballPhysics(scene, this.ball);
+
 					//Add collider for ball and player
 					scene.physics.add.overlap(
 						this.player,
@@ -85,6 +87,11 @@ class Player extends Phaser.GameObjects.Group {
 				if (this.ball) {
 					this.ball.destroy();
 				}
+				this.player.body.setEnable(true);
+				scene.input.off("pointerdown");
+				scene.input.off("pointermove");
+				scene.input.off("pointerup");
+				scene.events.emit("fadeOut");
 				return;
 			}
 			//Update bomb
@@ -110,7 +117,7 @@ class Player extends Phaser.GameObjects.Group {
 								game.config.width,
 								game.config.height / 2 - 32
 							);
-							bomb.setTexture("items", 2);
+							bomb.setTexture("items", 3);
 							bomb.setScale(2);
 							bomb.setVisible(true);
 							bomb.setVelocity(50, 50);
@@ -178,7 +185,7 @@ class Player extends Phaser.GameObjects.Group {
 			this.velocity.v = y;
 		}
 		//Check if touching ground
-		this.inAir = !this.player.body.touching.down;
+		this.inAir = !this.player.body.onFloor();
 
 		//check if changed direction while in air
 		if (this.inAir) {
@@ -317,4 +324,71 @@ class Player extends Phaser.GameObjects.Group {
 		this.animation();
 		this.arrowState();
 	}
+}
+
+const LIVE_SPAWN = 10;
+const BOMB_SPAWN = 15;
+function ballPhysics(scene, ball) {
+	scene.physics.add.overlap(ball, scene.bombs, (ball, bomb) => {
+		if (scene.gameState.lives === 0) {
+			ball.destroy();
+			return;
+		}
+		scene.gameState.score++;
+		if (scene.gameState.score % LIVE_SPAWN === 0) {
+			let heart = new PickUp(scene);
+			scene.physics.add.overlap(heart, scene.player, () => {
+				scene.gameState.lives++;
+				heart.destroy();
+			});
+		}
+		if (scene.gameState.score % BOMB_SPAWN === 0) {
+			let newBomb = scene.physics.add
+				.sprite(16, 16, "items", 3)
+				.setScale(2);
+			scene.bombs.add(newBomb);
+			newBomb.setRandomPosition(
+				0,
+				0,
+				game.config.width,
+				game.config.height / 2 - 32
+			);
+			newBomb.setCircle(8);
+			newBomb.setBounce(1);
+			newBomb.setCollideWorldBounds(true);
+			newBomb.setVelocity(50, 50);
+		}
+
+		//Update bomb
+		bomb.disableBody();
+		bomb.setScale(1);
+		bomb.setTexture("explosion");
+		bomb.play("explosion", false);
+		bomb.once(
+			"animationcomplete", //Phaser.Animations.Events.SPRITE_ANIMATION_COMPLETE
+			() => {
+				//scene.bombs.remove(bomb, true, true);
+				var timer = scene.time.addEvent({
+					delay: 1000,
+					callback: () => {
+						if (scene.gameState.lives === 0) return;
+						bomb.setRandomPosition(
+							0,
+							0,
+							game.config.width,
+							game.config.height / 2 - 32
+						);
+						bomb.setTexture("items", 3);
+						bomb.setScale(2);
+						bomb.setVisible(true);
+						bomb.setVelocity(50, 50);
+						bomb.enableBody();
+						timer.remove();
+					},
+					callbackScope: this,
+					loop: false,
+				});
+			}
+		);
+	});
 }

@@ -1,4 +1,4 @@
-const ballMultiplier = 700;
+const ballMultiplier = 600;
 const ballBounce = 0.9;
 
 class ThrowBall extends Phaser.GameObjects.Sprite {
@@ -22,61 +22,5 @@ class ThrowBall extends Phaser.GameObjects.Sprite {
 				ballMultiplier * velocity.y
 			);
 		}
-
-		scene.physics.add.overlap(this, scene.bombs, (ball, bomb) => {
-			if (scene.gameState.lives === 0) {
-				this.destroy();
-				return;
-			}
-			scene.gameState.score++;
-			if (scene.gameState.score % 10 === 0) {
-				scene.gameState.lives++;
-				let newBomb = scene.physics.add
-					.sprite(16, 16, "items", 2)
-					.setScale(2);
-				scene.bombs.add(newBomb);
-				newBomb.setRandomPosition(
-					0,
-					0,
-					game.config.width,
-					game.config.height / 2 - 32
-				);
-				newBomb.setCircle(8);
-				newBomb.setBounce(1);
-				newBomb.setCollideWorldBounds(true);
-				newBomb.setVelocity(50, 50);
-			}
-			//Update bomb
-			bomb.disableBody();
-			bomb.setScale(1);
-			bomb.setTexture("explosion");
-			bomb.play("explosion", false);
-			bomb.once(
-				"animationcomplete", //Phaser.Animations.Events.SPRITE_ANIMATION_COMPLETE
-				() => {
-					//scene.bombs.remove(bomb, true, true);
-					var timer = scene.time.addEvent({
-						delay: 1000,
-						callback: () => {
-							if (scene.gameState.lives === 0) return;
-							bomb.setRandomPosition(
-								0,
-								0,
-								game.config.width,
-								game.config.height / 2 - 32
-							);
-							bomb.setTexture("items", 2);
-							bomb.setScale(2);
-							bomb.setVisible(true);
-							bomb.setVelocity(50, 50);
-							bomb.enableBody();
-							timer.remove();
-						},
-						callbackScope: this,
-						loop: false,
-					});
-				}
-			);
-		});
 	}
 }

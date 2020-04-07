@@ -10,7 +10,7 @@ class GameOver extends Phaser.Scene {
 		this.add
 			.text(config.width / 2, 50, "GAME OVER", {
 				fontFamily: "pixelfont",
-				fontSize: "36px",
+				fontSize: "48px",
 				fill: "white",
 			})
 			.setOrigin(0.5);
@@ -18,7 +18,7 @@ class GameOver extends Phaser.Scene {
 		let playAgain = this.add
 			.text(config.width / 2, 120, "PLAY AGAIN", {
 				fontFamily: "pixelfont",
-				fontSize: "20px",
+				fontSize: "28px",
 				fill: "white",
 			})
 			.setOrigin(0.5)
@@ -27,14 +27,14 @@ class GameOver extends Phaser.Scene {
 		let mainMenu = this.add
 			.text(config.width / 2, 180, "MAIN MENU", {
 				fontFamily: "pixelfont",
-				fontSize: "20px",
+				fontSize: "28px",
 				fill: "white",
 			})
 			.setOrigin(0.5)
 			.setInteractive();
 
 		const style = {
-			font: "24px pixelfont",
+			font: "36px pixelfont",
 			fill: "#454545",
 		};
 
